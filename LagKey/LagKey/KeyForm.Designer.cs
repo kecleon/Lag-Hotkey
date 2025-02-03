@@ -1,4 +1,4 @@
-﻿namespace LagKey
+namespace LagKey
 {
 	partial class KeyForm
 	{
@@ -82,7 +82,7 @@
 			this.txtPort.Name = "txtPort";
 			this.txtPort.Size = new System.Drawing.Size(72, 20);
 			this.txtPort.TabIndex = 4;
-			this.txtPort.Text = "2050";
+			this.txtPort.Text = KeyForm.Port.ToString();
 			this.txtPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.txtPort.TextChanged += new System.EventHandler(this.txtPort_TextChanged);
 			// 

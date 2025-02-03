@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -92,31 +92,31 @@ namespace LagKey
 				txtPort.Text = "65535";
 			}
 
+			Port = port;
+
 			if (port != Port)
 			{
 				//reset filter to new port
 				UpdatePolicyPort();
 			}
-
-			Port = port;
 		}
-
+		
 		private void SetupNetSH()
 		{
-			//create netsh console, keep it open so toggling can write to existing session  
 			var startInfo = new ProcessStartInfo
 			{
 				FileName = "netsh.exe",
 				RedirectStandardInput = true,
-				RedirectStandardError = true,
-				RedirectStandardOutput = true,
 				UseShellExecute = false,
 				CreateNoWindow = true,
-				ErrorDialog = false,
 			};
 
 			NetSH = Process.Start(startInfo);
+
+			// Ensure commands are immediately flushed
 			NetSH.StandardInput.AutoFlush = true;
+
+			// Initialize IPsec rules
 			UpdatePolicyPort();
 		}
 
@@ -129,6 +129,7 @@ namespace LagKey
 			NetSH.StandardInput.WriteLine("ipsec static add filter filterlist=lag srcaddr=any dstaddr=any protocol=tcp dstport=" + Port);
 			NetSH.StandardInput.WriteLine("ipsec static add filteraction lag action=block");
 			NetSH.StandardInput.WriteLine("ipsec static add rule name=lag policy=lag filterlist=lag filteraction=lag");
+			NetSH.StandardInput.Flush();
 		}
 
 		private void ToggleLag()
@@ -157,6 +158,8 @@ namespace LagKey
 				this.lblStatus.ForeColor = Color.Lime;
 				this.Icon = Resources.disconnected;
 			}
+			
+			NetSH.StandardInput.Flush();
 		}
 
 		//vk name (Oem5) to proper human friendly name
